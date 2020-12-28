@@ -71,7 +71,7 @@ class CloudStorageApplicationTests {
 		
 		signupPage.signUp(fname, lname, uname, pass);
 		
-		Assertions.assertEquals("You successfully signed up! Please continue to the login page.",signupPage.getSignupMsg());
+		Assertions.assertEquals("You successfully signed up! Please login to continue.",signupPage.getSignupMsg());
 		
 		
 		//Login Test

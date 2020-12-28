@@ -88,13 +88,20 @@ public class HomeContoller {
 	
 	@PostMapping("/file-upload")
 	public String fileUpload(@RequestParam("fileUpload") MultipartFile fileUpload, Model model) throws IOException {
-			
+		
+		try {
 		if (fileUpload.getOriginalFilename().isEmpty()) {
 			model.addAttribute("uploadError", "Please Select a File to Upload.");
 			setModel(model);
 			model.addAttribute("activeTab", "file");
 			return "home";
 		}
+		
+		if (fileUpload.getSize() > 1048576) {
+            
+            model.addAttribute("uploadError","File size larger than size limit( < 1MB)");
+            throw new IOException("Error: File size larger than size limit");
+        }
 		
 		if (!fileService.isFileNameAvailable(fileUpload.getOriginalFilename(), userId)) {
 			File file = new File();
@@ -112,9 +119,12 @@ public class HomeContoller {
 		}else {
 			model.addAttribute("uploadError", "Please Select a unique File Name.");
 		}
+		
+		} catch (IOException e) {
+		}
 		setModel(model);
 		model.addAttribute("activeTab", "file");
-		return "home";		
+		return "home";
 	}
 	
 	@GetMapping("/file-view")
@@ -164,6 +174,7 @@ public class HomeContoller {
 		credentialService.deleteCredential(credentialId);
 		setModel(model);
 		model.addAttribute("activeTab", "credential");
+		model.addAttribute("updateCredential","Credential successfully deleted");
 		return "home";
 	}
 	
